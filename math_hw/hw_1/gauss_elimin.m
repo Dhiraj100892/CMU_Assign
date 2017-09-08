@@ -1,5 +1,6 @@
 function [ P, L, D, U ,A_dash] = gauss_elimin( A )
 
+%% small change
 org_A = A;
 dim = size(A,1);
 P = eye(dim);
