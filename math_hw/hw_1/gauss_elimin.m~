@@ -1,0 +1,63 @@
+function [ P, L, D, U ,A_dash] = gauss_elimin( A )
+
+org_A = A;
+dim = size(A,1);
+P = eye(dim);
+L = eye(dim);
+D = eye(dim);
+U = eye(dim);
+
+for i = 1:dim - 1
+    
+   %% check if the diagonal element is 0
+   if A(i,i) == 0
+       %interchange the row with non zero corresponding diagonal element
+       for j = i+1 : dim
+           if A(j,i) ~= 0
+               
+               disp('changing rows')
+               %% change in A
+               A_i_row = A(i,:);
+               A(i,:) =  A(j,:);
+               A(j,:) = A_i_row;
+               
+               %% change in P
+               P_i_row = P(i,:);
+               P(i,:) = P(j,:);
+               P(j,:) = P_i_row;
+               
+               %% change in L
+               L_i_row = L(i,:);
+               L(i,:) = L(j,:);
+               L(j,:) = L_i_row;
+               
+               L_i_i = L(i,i);
+               L_j_i = L(j,i);
+               L(i,i) = L(i,j);
+               L(i,j) = L_i_i;
+               L(j,i) = L(j,j);
+               L(j,j) = L_j_i;
+           end
+       end
+   else
+       %% for each row (below corresponding diagonal element) do eleimination
+       for j = i + 1: dim
+           mul_fact = A(j,i) / A(i,i);
+           A(j,:) = A(j,:) - mul_fact * A(i,:);
+           L(j,i:end) = L(j,i:end) + mul_fact * L(i,i:end);
+       end
+       
+   end
+end
+A_dash = A;
+
+%% for testing
+disp('req_ans = ')
+P * org_A
+
+disp('calc_ans = ')
+L * A_dash
+
+%% D_U decomposition
+
+end
